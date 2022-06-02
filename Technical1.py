@@ -1,7 +1,8 @@
+file = open('Test.txt', 'r')
 
+keywords = ["", ""]
+identifier = ["", ""]
+operators = ["", ""]
+separators = ["", ""]
 
-
-Keywords
-Identifier 
-Operators
-Separators
+f.close()
