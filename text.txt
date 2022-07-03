@@ -1,9 +1,18 @@
-int x = 2
+num a 
+text name
+fixed c = 10
+dec x
 
-if(x > 2){
-pr(x)
 
-}
-else{
-    
-}
+fire ("Enter name")
+reload (name)
+
+fire ("Enter age")
+reload (a)
+
+x = a / 10
+
+if x < 10
+    fire ({name} + name)
+else
+    fire ({age} + age)
