@@ -45,16 +45,24 @@ def viewLexemes():
 
     print("=== View Lexemes/Tokens ===")
     for word in file: #read per line
+        comstatus = False
         for char in word: #read per character
             if strstatus == True and char != '"': #if an iteration of " is found this will not proceed
+                temp.append(char)
+
+            elif comstatus == True and char != word[-1]:
                 temp.append(char)
 
             elif char == "\n": #proceed here if newline is encountered
                 for item in temp: #list per character per word
                     tempString += item #combined characters to string
                 temp.clear()
+
                 if tempString == "": #so empty newlines dont get printed
-                    continue
+                    pass
+                elif char == word[-1] and comstatus == True:
+                    print(tempString, "-> comment")
+                    comstatus = False
                 elif prevValue != curValue: #to check if an occurence of a string was observed
                     print(tempString, "-> string")
                     prevValue = curValue
@@ -76,6 +84,16 @@ def viewLexemes():
             elif char != " ": #proceed here if not space and newline
                 if char not in keyCharacters:
                     temp.append(char)
+                    if char == "#" and comstatus == False:
+                        comstatus = True
+                    elif char == word[-1] and comstatus == True:
+                        for item in temp:
+                            tempString += item
+                        temp.clear()
+                        print(tempString, "-> comment")
+                        tempString = ""
+                        lexemeCount += 1
+                        comstatus = False
                 else: 
                     if char == '"' and strstatus == False: #used to manage strstatus and curValue
                         curValue = curValue + 1
@@ -93,7 +111,7 @@ def viewLexemes():
                             tempString += item
                         temp.clear()
                         if tempString == "":
-                            continue
+                            pass
                         elif prevValue != curValue:
                             print(tempString, "-> string")
                             prevValue = curValue   
@@ -124,7 +142,7 @@ def viewLexemes():
                     tempString += item
                 temp.clear()
                 if tempString == "":
-                    continue
+                    pass
                 elif prevValue != curValue:
                     print(tempString, "-> string")
                     prevValue = curValue
@@ -142,15 +160,77 @@ def viewLexemes():
                     print(tempString, "-> variable")
                 tempString = ""
                 lexemeCount += 1
-    print("Total Lexemes: ", lexemeCount) 
+    print("Total Lexemes: ", lexemeCount)
     
+def viewLexicalError():
+    datatype = ["num", "dec", "let", "text", "cond"]
+    nonVar = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "!", "@", "#", "$", "%", "^", "&", "*", "(", ")"]
+    lineCount = 1
+    print("=== View Lexical Error ===")
+    for line in file:
+        words = line.split()
+        print("== line ", lineCount, " ==")
+        if words == [] or words[0] not in datatype:
+            pass
+        elif words[0] == "num":
+            if len(words) < 3:
+                pass
+            elif (int(words[3]) > 2147483647 or int(words[3]) < -2147483648):
+                print("Limit of num reached -> Lexical Error")
+            else:
+                pass
+            if words[1][0] in nonVar:
+                print("Variable wrong spelling -> Lexical Error")
+            else:
+                pass
+        else:
+            pass
+        lineCount = lineCount + 1
+
+def viewSyntaxError():
+    letters = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]
+    number = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+    operator = ""
+    lineCount = 1
+    print("=== View Syntax Error ===")
+    for line in file:
+        words = line.split()
+        print("== line ", lineCount, " ==")
+        for i in words:
+            if i == "==":
+                operator = "=="
+            elif i == "=":
+                operator = "="
+        if words == []:
+            pass
+        elif words[0][0] in number:
+            if words[1] == "=":
+                if words[2][0].lower() in letters:
+                    print("Wrong Syntax -> Syntax Error")
+        elif words[0] == "if" or words[0] == "ei" or words[0] == "while":
+            if operator == "=":
+                print("Wrong use of == operator -> Syntax Error")
+            else:
+                pass
+
+        elif words[0] != "if" or words[0] != "ei" or words[0] != "while":
+            if operator == "==":
+                print("Wrong use of = operator -> Syntax Error")
+            else:
+                pass
+
+        operator = ""
+        lineCount = lineCount + 1
+
+def viewSemanticError():
+    print("=== View Semantic Error ===")
 
 def mainMenu():
     print("\n===== Main Menu =====")
     print("[1] Upload Text File")
     print("[2] View Lexemes/Tokens")
-    print("[3] View Lexical Error(Not Done)")
-    print("[4] View Syntax Error(Not Done)")
+    print("[3] View Lexical Error")
+    print("[4] View Syntax Error")
     print("[5] View Semantic Error(Not Done)")
     print("[6] Exit")
     print("Enter Choice: ", end='')
@@ -169,6 +249,14 @@ def mainMenu():
     #View Lexemes/Tokens
     elif ch == 2:
         viewLexemes()
+
+    #View View Lexical Error
+    elif ch == 3:
+        viewLexicalError()
+
+    #View View Syntax Error
+    elif ch == 4:
+        viewSyntaxError()
 
     #Exit
     elif ch == 6:
