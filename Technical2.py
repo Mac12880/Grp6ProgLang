@@ -6,29 +6,19 @@ from turtle import clear
 
 def getTxt():
     tkinter.Tk().withdraw()
-    filepath = filedialog.askopenfilename(initialdir="C:\\Users",
+    filepath = filedialog.askopenfilename(initialdir="N:\Schoolworks\Prog Languages\PL Final Proj",
                                           title="Select Text File",
                                           filetypes= (("text files","*.txt"), ("python files","*.py"),
                                           ("all files","*.*")))
     global file
-    file = open(filepath,'r')
+    file = open(filepath,'r+')
     
     if file == "":
         print("\n==No File Uploaded==")
     else:
         print("\n==File Uploaded==")
-    
+
 def viewLexemes():
-    keywords = ["continue","finally","assert","lambda","return","global","except","import","class","break","raise","while","print","yield","pass","exec","else","with","elif","from","def","not","try","and","del","for","is","if","fire","reload","ei", "fixed"]
-    arithmetics = ["+", "-", "*", "/", "//"]
-    assignments = ["<<=", ">>=", "^=", "|=", "&=", "**=", "//=", "%=", "/=", "*=", "-=", "+=", "="]
-    comparisons = ["==", "!=", ">=", "<=", ">", "<"]
-    logicals = ["and", "or", "not"]
-    identifiers = ["is", "is not"]
-    memberships = ["in", "not in"]
-    bitwise = ["&", "|", "^", "~", "<<", ">>"]
-    keyCharacters = [".", ",", ":", ";", "'", '"', "{", "}", "[", "]", "(", ")"]
-    datatype = ["num", "dec", "let", "text", "cond"]
     tempString = ""
     prevTemp = ""
     nextLine = "\n"
@@ -163,8 +153,6 @@ def viewLexemes():
     print("Total Lexemes: ", lexemeCount)
     
 def viewLexicalError():
-    datatype = ["num", "dec", "let", "text", "cond"]
-    nonVar = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "!", "@", "#", "$", "%", "^", "&", "*", "(", ")"]
     lineCount = 1
     print("=== View Lexical Error ===")
     for line in file:
@@ -177,11 +165,15 @@ def viewLexicalError():
             elif (int(words[3]) > 2147483647 or int(words[3]) < -2147483648):
                 print("== line ", lineCount, " ==")
                 print("Limit of num reached -> Lexical Error")
+            elif re.match("\A[^a-z]", words[1][0]): #Does not accept any special character EVEN underscore
+                    print("== line ", lineCount, " ==")
+                    print("Invalid variable declaration -> Lexical Error")
             else:
                 pass
-            if words[1][0] in nonVar:
-                print("== line ", lineCount, " ==")
-                print("Variable wrong spelling -> Lexical Error")
+        elif words[0] in datatype:
+            if re.match("\A[^a-z]", words[1][0]): #Does not accept any special character EVEN underscore
+                    print("== line ", lineCount, " ==")
+                    print("Invalid variable declaration -> Lexical Error")
             else:
                 pass
         else:
@@ -189,8 +181,6 @@ def viewLexicalError():
         lineCount = lineCount + 1
 
 def viewSyntaxError():
-    letters = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]
-    number = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
     operator = ""
     lineCount = 1
     print("=== View Syntax Error ===")
@@ -203,21 +193,22 @@ def viewSyntaxError():
                 operator = "="
         if words == []:
             pass
-        elif words[0][0] in number:
+        elif re.match("\A[^a-z]", words[0][0]): #Does not accept any special character EVEN underscore
             if words[1] == "=":
-                if words[2][0].lower() in letters:
+                if re.match("[a-z]", words[2][0]):
                     print("== line ", lineCount, " ==")
-                    print("Wrong Syntax -> Syntax Error")
+                    print("Inverted assigning of value -> Syntax Error")
         elif words[0] == "if" or words[0] == "ei" or words[0] == "while":
             if operator == "=":
                 print("== line ", lineCount, " ==")
-                print("Wrong use of == operator -> Syntax Error")
+                print("Wrong use of = operator -> Syntax Error")
             else:
                 pass
 
         elif words[0] != "if" or words[0] != "ei" or words[0] != "while":
             if operator == "==":
-                print("Wrong use of = operator -> Syntax Error")
+                print("== line ", lineCount, " ==")
+                print("Wrong use of == operator -> Syntax Error")
             else:
                 pass
 
@@ -226,15 +217,13 @@ def viewSyntaxError():
 
 def viewSemanticError():
     print("=== View Semantic Error ===")
-    datatype = ["num", "dec", "let", "text", "cond"]
     varList = []
     lineCount = 1
-    print("=== View Semantic Error ===")
     for line in file:
         words = line.split()
         if words == []:
             pass
-        elif words[0] not in datatype:
+        elif words[0] not in datatype or words[0] not in keywords:
             if len(words) < 2:
                 pass
             elif words[1] == "=" and words[0] not in varList:
@@ -252,7 +241,9 @@ def viewSemanticError():
             pass
         
         lineCount = lineCount + 1
+
 def mainMenu():
+        
     print("\n===== Main Menu =====")
     print("[1] Upload Text File")
     print("[2] View Lexemes/Tokens")
@@ -285,10 +276,35 @@ def mainMenu():
     elif ch == 4:
         viewSyntaxError()
 
+    elif ch == 5:
+        viewSemanticError()
+
     #Exit
     elif ch == 6:
         print("=== Exiting ===")
         exit()
+        
+global keywords
+global arithmetics
+global assignments
+global comparisons
+global logicals
+global identifiers
+global memberships
+global bitwise
+global keyCharacters
+global datatype
+keywords = ["continue","finally","assert","lambda","return","global","except","import","class","break","raise","while","print","yield","pass","exec","else","with","elif","from","def","not","try","and","del","for","is","if","fire","reload","ei", "fixed"]
+arithmetics = ["+", "-", "*", "/", "//"]
+assignments = ["<<=", ">>=", "^=", "|=", "&=", "**=", "//=", "%=", "/=", "*=", "-=", "+=", "="]
+comparisons = ["==", "!=", ">=", "<=", ">", "<"]
+logicals = ["and", "or", "not"]
+identifiers = ["is", "is not"]
+memberships = ["in", "not in"]
+bitwise = ["&", "|", "^", "~", "<<", ">>"]
+keyCharacters = [".", ",", ":", ";", "'", '"', "{", "}", "[", "]", "(", ")"]
+datatype = ["num", "dec", "let", "text", "cond"]
+global keptFile
 
 while True:
     mainMenu()
