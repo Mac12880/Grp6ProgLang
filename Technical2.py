@@ -275,7 +275,8 @@ def mainMenu():
     #View View Syntax Error
     elif ch == 4:
         viewSyntaxError()
-
+    
+    #View View Semantic Error
     elif ch == 5:
         viewSemanticError()
 
