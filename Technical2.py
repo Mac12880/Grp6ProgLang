@@ -169,17 +169,18 @@ def viewLexicalError():
     print("=== View Lexical Error ===")
     for line in file:
         words = line.split()
-        print("== line ", lineCount, " ==")
         if words == [] or words[0] not in datatype:
             pass
         elif words[0] == "num":
             if len(words) < 3:
                 pass
             elif (int(words[3]) > 2147483647 or int(words[3]) < -2147483648):
+                print("== line ", lineCount, " ==")
                 print("Limit of num reached -> Lexical Error")
             else:
                 pass
             if words[1][0] in nonVar:
+                print("== line ", lineCount, " ==")
                 print("Variable wrong spelling -> Lexical Error")
             else:
                 pass
@@ -195,7 +196,6 @@ def viewSyntaxError():
     print("=== View Syntax Error ===")
     for line in file:
         words = line.split()
-        print("== line ", lineCount, " ==")
         for i in words:
             if i == "==":
                 operator = "=="
@@ -206,9 +206,11 @@ def viewSyntaxError():
         elif words[0][0] in number:
             if words[1] == "=":
                 if words[2][0].lower() in letters:
+                    print("== line ", lineCount, " ==")
                     print("Wrong Syntax -> Syntax Error")
         elif words[0] == "if" or words[0] == "ei" or words[0] == "while":
             if operator == "=":
+                print("== line ", lineCount, " ==")
                 print("Wrong use of == operator -> Syntax Error")
             else:
                 pass
@@ -224,14 +226,39 @@ def viewSyntaxError():
 
 def viewSemanticError():
     print("=== View Semantic Error ===")
-
+    datatype = ["num", "dec", "let", "text", "cond"]
+    varList = []
+    lineCount = 1
+    print("=== View Semantic Error ===")
+    for line in file:
+        words = line.split()
+        if words == []:
+            pass
+        elif words[0] not in datatype:
+            if len(words) < 2:
+                pass
+            elif words[1] == "=" and words[0] not in varList:
+                print("== line ", lineCount, " ==")
+                print("Assigning to undefined variable -> Semantic Error")
+            else:
+                pass
+        elif words[0] in datatype:
+            if words[1] in varList:
+                print("== line ", lineCount, " ==")
+                print("Redefining Variable -> Semantic Error")
+            else:
+                varList.append(words[1])
+        else:
+            pass
+        
+        lineCount = lineCount + 1
 def mainMenu():
     print("\n===== Main Menu =====")
     print("[1] Upload Text File")
     print("[2] View Lexemes/Tokens")
     print("[3] View Lexical Error")
     print("[4] View Syntax Error")
-    print("[5] View Semantic Error(Not Done)")
+    print("[5] View Semantic Error")
     print("[6] Exit")
     print("Enter Choice: ", end='')
 
