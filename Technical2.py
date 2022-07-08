@@ -11,12 +11,31 @@ def getTxt():
                                           filetypes= (("text files","*.txt"), ("python files","*.py"),
                                           ("all files","*.*")))
     global file
+    global fileName
     file = open(filepath,'r+')
+    fileName = file.name
     
     if file == "":
         print("\n==No File Uploaded==")
     else:
         print("\n==File Uploaded==")
+
+def keepTxt():
+    global keptFile
+    keptFile = ""
+    fileNameList = []
+    for char in fileName:
+        fileNameList.append(char)
+
+    for item in fileNameList:
+        if item == "/":
+            keptFile += "\\"
+        else:
+            keptFile += item
+
+def reopenTxt():
+    global file
+    file = open(keptFile, 'r+')
 
 def viewLexemes():
     tempString = ""
@@ -226,9 +245,9 @@ def viewSemanticError():
         elif words[0] not in datatype or words[0] not in keywords:
             if len(words) < 2:
                 pass
-            elif words[1] == "=" and words[0] not in varList:
+            elif words[1] == "=" and words[0] not in varList and re.match("[^0-9]", words[0]):
                 print("== line ", lineCount, " ==")
-                print("Assigning to undefined variable -> Semantic Error")
+                print("Assigning to undefined variable -> Semantic Error") 
             else:
                 pass
         elif words[0] in datatype:
@@ -275,8 +294,7 @@ def mainMenu():
     #View View Syntax Error
     elif ch == 4:
         viewSyntaxError()
-    
-    #View View Semantic Error
+
     elif ch == 5:
         viewSemanticError()
 
@@ -284,7 +302,22 @@ def mainMenu():
     elif ch == 6:
         print("=== Exiting ===")
         exit()
-        
+
+#MAIN CODE
+tkinter.Tk().withdraw()
+filepath = filedialog.askopenfilename(initialdir="N:\Schoolworks\Prog Languages\PL Final Proj",
+                                        title="Select Text File",
+                                        filetypes= (("text files","*.txt"), ("python files","*.py"),
+                                        ("all files","*.*")))
+global file
+global fileName
+file = open(filepath,'r+')
+fileName = file.name
+
+if file == "":
+    print("\n==No File Uploaded==")
+else:
+    print("\n==File Uploaded==")
 global keywords
 global arithmetics
 global assignments
@@ -308,4 +341,6 @@ datatype = ["num", "dec", "let", "text", "cond"]
 global keptFile
 
 while True:
+    keepTxt()
+    reopenTxt()
     mainMenu()
