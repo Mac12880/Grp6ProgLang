@@ -2,11 +2,10 @@ import re
 import tkinter
 from tkinter import *
 from tkinter import filedialog
-from turtle import clear
 
 def getTxt():
     tkinter.Tk().withdraw()
-    filepath = filedialog.askopenfilename(initialdir="N:\Schoolworks\Prog Languages\PL Final Proj",
+    filepath = filedialog.askopenfilename(initialdir="C:\\Users",
                                           title="Select Text File",
                                           filetypes= (("text files","*.txt"), ("python files","*.py"),
                                           ("all files","*.*")))
@@ -210,7 +209,7 @@ def viewSyntaxError():
                 operator = "=="
             elif i == "=":
                 operator = "="
-        if words == []:
+        if words == [] or len(words) == 1:
             pass
         elif re.match("\A[^a-z]", words[0][0]): #Does not accept any special character EVEN underscore
             if words[1] == "=":
@@ -242,7 +241,7 @@ def viewSemanticError():
         words = line.split()
         if words == []:
             pass
-        elif words[0] not in datatype or words[0] not in keywords:
+        elif words[0] not in datatype and words[0] not in keywords:
             if len(words) < 2:
                 pass
             elif words[1] == "=" and words[0] not in varList and re.match("[^0-9]", words[0]):
