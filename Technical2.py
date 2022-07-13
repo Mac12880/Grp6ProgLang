@@ -82,6 +82,8 @@ def viewLexemes():
                     print(tempString, "-> keyword")
                 elif tempString in datatype:
                     print(tempString, "-> datatype")
+                elif tempString in constants:
+                    print(tempString, "-> constant")
                 elif re.match("[0-9]+", tempString):
                     print(tempString, "-> integer")
                 else:
@@ -131,6 +133,8 @@ def viewLexemes():
                             print(tempString, "-> keyword")
                         elif tempString in datatype:
                             print(tempString, "-> datatype")
+                        elif tempString in constants:
+                            print(tempString, "-> constant")
                         elif re.match("[0-9]+", tempString):
                             print(tempString, "-> integer")
                         else:
@@ -162,6 +166,8 @@ def viewLexemes():
                     print(tempString, "-> keyword")
                 elif tempString in datatype:
                     print(tempString, "-> datatype")
+                elif tempString in constants:
+                    print(tempString, "-> constant")
                 elif re.match("[0-9]+", tempString):
                     print(tempString, "-> integer")
                 else:
@@ -327,7 +333,8 @@ global memberships
 global bitwise
 global keyCharacters
 global datatype
-keywords = ["continue","finally","assert","lambda","return","global","except","import","class","break","raise","while","print","yield","pass","exec","else","with","elif","from","def","not","try","and","del","for","is","if","fire","reload","ei", "fixed"]
+global constants
+keywords = ["continue", "const","finally","assert","lambda","return","global","except","import","class","break","raise","while","print","yield","pass","exec","else","with","elif","from","def","not","try","and","del","for","is","if","fire","reload","ei", "fixed"]
 arithmetics = ["+", "-", "*", "/", "//"]
 assignments = ["<<=", ">>=", "^=", "|=", "&=", "**=", "//=", "%=", "/=", "*=", "-=", "+=", "="]
 comparisons = ["==", "!=", ">=", "<=", ">", "<"]
@@ -337,6 +344,7 @@ memberships = ["in", "not in"]
 bitwise = ["&", "|", "^", "~", "<<", ">>"]
 keyCharacters = [".", ",", ":", ";", "'", '"', "{", "}", "[", "]", "(", ")"]
 datatype = ["num", "dec", "let", "text", "cond"]
+constants = ["pi", "gravity"]
 global keptFile
 
 while True:
